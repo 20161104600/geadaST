@@ -124,10 +124,44 @@ void saveS(SeqListS *L)   //存储学生数据
             }
             else if(L->lastS!=-1)
             {
-                for (i=0;i<=L->lastS;i++)
+                ElemTypeS X[MAXSIZE];
+                ElemTypeS Y[MAXSIZE];
+                int a=0,b=0;
+                for(i=0;i<=L->lastS;i++)
+                {
+                    if(strcmp(L->elem[i].protype,"L1")==0)
+                       {
+                           strcpy(X[b].name,L->elem[i].name);
+                           strcpy(X[b].sex,L->elem[i].sex);
+                           strcpy(X[b].proname,L->elem[i].proname);
+                           strcpy(X[b].protype,L->elem[i].protype);
+                           strcpy(X[b].class,L->elem[i].class);
+                           X[b].num=L->elem[i].num;
+                           X[b].Score=L->elem[i].Score;
+                           b++;
+                       }
+                    else if(strcmp(L->elem[i].protype,"L2")==0)
+                    {
+                        strcpy(Y[a].name,L->elem[i].name);
+                        strcpy(Y[a].sex,L->elem[i].sex);
+                        strcpy(Y[a].proname,L->elem[i].proname);
+                        strcpy(Y[a].protype,L->elem[i].protype);
+                        strcpy(Y[a].class,L->elem[i].class);
+                        Y[a].num=L->elem[i].num;
+                        Y[a].Score=L->elem[i].Score;
+                        a++;
+                    }
+                }
+                for (i=0;i<=b-1;i++)
                 {
                     //fprintf(fp,"|%-8d|%-8s|%-10d|%-8d|%-8d|%-8d|%-8d|\n",i+1,L->elem[i].name,L->elem[i].num,L->elem[i].MathScore,L->elem[i].ChinaseScore,L->elem[i].EnglishScore,L->elem[i].Score);
-                    fprintf(fp,"%d,%s,%s,%s,%s,%d,%s\n",i+1,L->elem[i].name,L->elem[i].sex,L->elem[i].proname,L->elem[i].protype,L->elem[i].num,L->elem[i].class);
+                    fprintf(fp,"%d,%s,%s,%s,%s,%d,%s,%d\n",i+1,X[b].name,X[b].sex,X[b].proname,X[b].protype,X[b].num,X[b].class,X[b].Score);
+                }
+                fprintf(fp,"\n\n");
+                for (i=0;i<=a-1;i++)
+                {
+                    //fprintf(fp,"|%-8d|%-8s|%-10d|%-8d|%-8d|%-8d|%-8d|\n",i+1,L->elem[i].name,L->elem[i].num,L->elem[i].MathScore,L->elem[i].ChinaseScore,L->elem[i].EnglishScore,L->elem[i].Score);
+                    fprintf(fp,"%d,%s,%s,%s,%s,%d,%s,%d\n",i+1,Y[a].name,Y[a].sex,Y[a].proname,Y[a].protype,Y[a].num,Y[a].class,Y[a].Score);
                 }
                 printf("        学生信息文件保存成功！\n");
                 fclose(fp);
@@ -158,7 +192,6 @@ void saveT(SeqListT *L)   //存储老师数据
             {
                 for (i=0;i<=L->lastT;i++)
                 {
-                    //fprintf(fp,"|%-8d|%-8s|%-10d|%-8d|%-8d|%-8d|%-8d|\n",i+1,L->elem[i].name,L->elem[i].num,L->elem[i].MathScore,L->elem[i].ChinaseScore,L->elem[i].EnglishScore,L->elem[i].Score);
                     fprintf(fp,"%d,%s,%s,%d\n",i+1,L->elem[i].name,L->elem[i].sex,L->elem[i].num);
                 }
                 printf("         教师信息文件保存成功！\n");
@@ -400,6 +433,24 @@ void sortMax(SeqListT *L)
     }
 }
 
+void sort(SeqListS *L)
+{
+    int i,j;
+    ElemTypeS X;
+    for(j=0;j<L->lastS-1;j++)
+    {
+        for(i=0;i<=L->lastS-1-j;i++)
+        {
+            if(L->elem[i].Score<L->elem[i+1].Score)
+            {
+                X=L->elem[i];
+                L->elem[i]=L->elem[i+1];
+                L->elem[i+1]=X;
+            }
+        }
+    }
+}
+
 int count(SeqListT L)
 {
     int i,j=0,c=0;
@@ -588,7 +639,7 @@ int displayT(SeqListT *L)// 显示老师信息
     j=L->lastT;
     if(j>=0)
     {
-        printf("\n|------------------------老师信息---------------------------|\n");
+        printf("\n|--------------老师信息--------------|\n");
         printf("| 序号  |  姓名   |  性别   |  联系方式  |\n");
         printf("|------|--------|---------|----------|\n");
         for(i=0;i<=L->lastT;i++)
@@ -713,11 +764,13 @@ int  main()
                 break;
             case 4:
                 grade(&l2, &l1);//评分
+                sort(&l1);
                 //display(l);
                 break;
             case 5:
                 loadS(&l1);//读取
                 loadT(&l2);
+                sort(&l1);
                 displayS(&l1);
                 displayT(&l2);
                 break;
