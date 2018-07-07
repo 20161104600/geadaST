@@ -15,7 +15,7 @@
 struct Student
 {
     char name[10];
-    char sex[3];
+    char sex[5];
     char proname[10];
     char protype[10];
     int num;
@@ -33,7 +33,7 @@ typedef struct
 struct Teacher
 {
     char name[10];
-    char sex[3];
+    char sex[5];
     int num;
     int Score;
 };
@@ -44,6 +44,68 @@ typedef struct
     ElemTypeT elem[MAXSIZE];
     int lastT;
 }SeqListT;
+
+int loadS(SeqListS *L)//从文件中读取--学生
+{
+    FILE * fp;
+    fp=fopen("/Users/hxxguohua/Desktop/grade/geadaST/geadaST/Student.txt","r");
+    if(fp==NULL)
+    {
+        printf("读取文件失败，没有找到对应的文件\n");
+        return 0;
+    }
+    else if(fp!=NULL)
+    {
+        int i,j;
+        L->lastS=-1;
+        char name[10],Ssex[5],Sproname[10],Sprotype[10],Sclass[10];
+        int num;
+        while(fscanf(fp,"%d %s %s %s %s %d %s\n",&j,name,Ssex,Sproname,Sprotype,&num,Sclass)!=EOF)
+        {
+            i=j-1;
+            strcpy(L->elem[i].name,name);
+            L->elem[i].num=num;
+            strcpy(L->elem[i].sex,Ssex);
+            strcpy(L->elem[i].proname,Sproname);
+            strcpy(L->elem[i].protype,Sprotype);
+            strcpy(L->elem[i].class,Sclass);
+            L->lastS++;
+        }
+        printf("        学生信息文件读取成功！\n\n");
+        fclose(fp);
+    }
+    return 0;
+}
+
+int loadT(SeqListT *L)//从文件中读取--老师
+{
+    FILE * fp;
+    fp=fopen("/Users/hxxguohua/Desktop/grade/geadaST/geadaST/Teacher.txt","r");
+    if(fp==NULL)
+    {
+        printf("读取文件失败，没有找到对应的文件\n");
+        return 0;
+    }
+    else if(fp!=NULL)
+    {
+        int i,j;
+        L->lastT=-1;
+        char name[10],Tsex[5];
+        int num;
+        while(fscanf(fp,"%d %s %s %d\n",&j,name,Tsex,&num)!=EOF)
+        {
+            i=j-1;
+            strcpy(L->elem[i].name,name);
+            L->elem[i].num=num;
+            strcpy(L->elem[i].sex,Tsex);
+            L->lastT++;
+        }
+        printf("        教师信息文件读取成功！\n\n");
+        fclose(fp);
+    }
+    return 0;
+}
+
 
 void saveS(SeqListS *L)   //存储学生数据
 {
@@ -67,7 +129,7 @@ void saveS(SeqListS *L)   //存储学生数据
                     //fprintf(fp,"|%-8d|%-8s|%-10d|%-8d|%-8d|%-8d|%-8d|\n",i+1,L->elem[i].name,L->elem[i].num,L->elem[i].MathScore,L->elem[i].ChinaseScore,L->elem[i].EnglishScore,L->elem[i].Score);
                     fprintf(fp,"%d,%s,%s,%s,%s,%d,%s\n",i+1,L->elem[i].name,L->elem[i].sex,L->elem[i].proname,L->elem[i].protype,L->elem[i].num,L->elem[i].class);
                 }
-                printf("文件保存成功！\n");
+                printf("        学生信息文件保存成功！\n");
                 fclose(fp);
             }
     }
@@ -99,7 +161,7 @@ void saveT(SeqListT *L)   //存储老师数据
                     //fprintf(fp,"|%-8d|%-8s|%-10d|%-8d|%-8d|%-8d|%-8d|\n",i+1,L->elem[i].name,L->elem[i].num,L->elem[i].MathScore,L->elem[i].ChinaseScore,L->elem[i].EnglishScore,L->elem[i].Score);
                     fprintf(fp,"%d,%s,%s,%d\n",i+1,L->elem[i].name,L->elem[i].sex,L->elem[i].num);
                 }
-                printf("文件保存成功！\n");
+                printf("         教师信息文件保存成功！\n");
                 fclose(fp);
             }
     }
@@ -117,22 +179,20 @@ char menu()
     printf("         |一============================一|        \n");
     printf("         |            菜单选项             |        \n");
     printf("         |-------------------------------|        \n");
-    printf("         |    1---输入                    |        \n");
-    printf("         |    2---增加                    |        \n");
-    printf("         |    3---删除                    |        \n");
-    printf("         |    4---修改                    |        \n");
-    printf("         |    5---查找                    |        \n");
-    printf("         |    6---评分                    |        \n");
-    printf("         |    7---在文件中读取              |        \n");
-    printf("         |    8---保存到文件中              |        \n");
-    printf("         |    9---退出                    |        \n");
+    printf("         |    1---学生信息处理              |        \n");
+    printf("         |    2---老师信息处理              |        \n");
+    printf("         |    3---查找                    |        \n");
+    printf("         |    4---评分                    |        \n");
+    printf("         |    5---在文件中读取              |        \n");
+    printf("         |    6---保存到文件中              |        \n");
+    printf("         |    7---退出                    |        \n");
     
     do
     {
-        printf("\n选择你要进行的操作(1-9):");
+        printf("\n选择你要进行的操作(1-7):");
         scanf("%d",&input);
     }
-    while(input<1 || input>9);
+    while(input<1 || input>8);
     return input;
 }
 
@@ -317,7 +377,7 @@ void chenageT(SeqListT* L) //修改老师信息
                 scanf("%d",&L->elem[i-1].num);
                 break;
         }
-        printf("是否继续修改学生们的信息：1.是   2.否\n");
+        printf("是否继续修改老师们的信息：1.是   2.否\n");
         scanf("%d",&D);
     }
 }
@@ -361,17 +421,6 @@ void readinT(SeqListT *L)// 输入老师相关信息
     //char name1[10];
     for(i=0; i<=r-1; i++)
     {
-        //ElemType X;
-        //scanf("%d",&X.num);
-        //scanf("%d",&X.score);
-        //L->elem[i]=X;
-        /*
-         char name[10];
-         int num;
-         int MathScore;
-         int ChinaseScore;
-         int EnglishScore;
-         */
         L->lastT++;
         printf("----------------------------\n");
         printf("请输入第%d名老师的信息：\n",i+1);
@@ -507,10 +556,140 @@ void grade(SeqListT *L1,SeqListS *L2)//评分
             scanf("%d",&j);
         }
         count(*L1);
-        printf("去除一个最高分：%d\n",L1->elem[0].Score);
-        printf("去除一个最低分：%d\n",L1->elem[a].Score);
+        printf("去除一个最高分：%d\n",L1->elem[a].Score);
+        printf("去除一个最低分：%d\n",L1->elem[0].Score);
         printf("最后%s同学得分为：%d\n\n1",L2->elem[s].name,count(*L1));
     }
+}
+
+int displayS(SeqListS *L)// 显示学生信息
+{
+    int j,i;
+    j=L->lastS;
+    if(j>=0)
+    {
+        printf("|-----------------------------------学生信息-----------------------------------|\n");
+        printf("| 序号  |  姓名   |  性别   |   班级   |   联系方式  | 节目名称 |  节目类型 |   分数  |\n");
+        printf("|------|--------|--------|----------|-----------|--------|----------|---------|\n");
+        for(i=0;i<=L->lastS;i++)
+        {
+            //。     |------|--------|--------|----------|-----------|--------|----------|--------|
+            printf("|%-6d|%-8s|%-8s|%-10s|%-11d|%-8s|%-10s|%-8d|\n",i+1,L->elem[i].name,L->elem[i].sex,L->elem[i].class,L->elem[i].num,L->elem[i].proname,L->elem[i].protype,L->elem[i].Score);
+        }
+    }
+    else if(L->lastS==-1)
+        printf("        没有可显示的学生信息！\n");
+    return 0;
+}
+
+int displayT(SeqListT *L)// 显示老师信息
+{
+    int j,i;
+    j=L->lastT;
+    if(j>=0)
+    {
+        printf("\n|------------------------老师信息---------------------------|\n");
+        printf("| 序号  |  姓名   |  性别   |  联系方式  |\n");
+        printf("|------|--------|---------|----------|\n");
+        for(i=0;i<=L->lastT;i++)
+        {
+            //。     |------|--------|---------|----------|
+            printf("|%-6d|%-8s|%-9s|%-11d|\n",i+1,L->elem[i].name,L->elem[i].sex,L->elem[i].num);
+        }
+    }
+    else if(L->lastT==-1)
+        printf("        没有可显示的老师信息！\n");
+    return 0;
+}
+
+char menuT(SeqListT *L)
+{
+    int input,a=0;
+    printf("\n");
+    printf("         |**********教师信息处理************|        \n");
+    printf("         |一============================一|        \n");
+    printf("         |            菜单选项             |        \n");
+    printf("         |-------------------------------|        \n");
+    printf("         |    1---输入                    |        \n");
+    printf("         |    2---增加                    |        \n");
+    printf("         |    3---删除                    |        \n");
+    printf("         |    4---修改                    |        \n");
+    printf("         |    5---退出                    |        \n");
+    
+    
+    while (a==0)
+    {
+        printf("\n选择你要进行的操作(1-5):");
+        scanf("%d",&input);
+        switch(input)
+        {
+            case 1:
+                readinT(L);//输入
+                displayT(L);
+                break;
+            case 2:
+                InsertT(L);//增加
+                displayT(L);
+                break;
+            case 3:
+                deletT(L);//删除
+                displayT(L);
+                break;
+            case 4:
+                chenageT(L);//修改
+                displayT(L);
+                break;
+            case 5:
+                printf("\n-----–教师信息处理完毕-----\n");
+                a=1;
+        }
+    }
+    return 0;
+}
+
+char menuS(SeqListS *L)
+{
+    int input,a=0;
+    printf("\n");
+    printf("         |**********学生信息处理************|        \n");
+    printf("         |一============================一|        \n");
+    printf("         |            菜单选项             |        \n");
+    printf("         |-------------------------------|        \n");
+    printf("         |    1---输入                    |        \n");
+    printf("         |    2---增加                    |        \n");
+    printf("         |    3---删除                    |        \n");
+    printf("         |    4---修改                    |        \n");
+    printf("         |    5---退出                    |        \n");
+    
+    
+    while (a==0)
+    {
+        printf("\n选择你要进行的操作(1-5):");
+        scanf("%d",&input);
+        switch(input)
+        {
+            case 1:
+                readinS(L);//输入
+                displayS(L);
+                break;
+            case 2:
+                InsertS(L);//增加
+                displayS(L);
+                break;
+            case 3:
+                deletS(L);//删除
+                displayS(L);
+                break;
+            case 4:
+                chenageS(L);//修改
+                displayS(L);
+                break;
+            case 5:
+                printf("-----–学生信息处理完毕-----\n");
+                a=1;
+        }
+    }
+    return 0;
 }
 
 int  main()
@@ -524,34 +703,29 @@ int  main()
         switch(menu())
         {
             case 1:
-                readinS(&l1);//输入
-                //display(l2);
+                menuS(&l1);
                 break;
             case 2:
-                Insert(&l2);//增加
+                menuT(&l2);
                 break;
             case 3:
-                delet(&l2);//删除
-                //display(l);
-                break;
-            case 4:
-                chenage(&l1);//修改
-                //display(l);
-                break;
-            case 5:
                 find(l2,l1);//查找
                 break;
-            case 6:
+            case 4:
                 grade(&l2, &l1);//评分
                 //display(l);
                 break;
-            case 7:
-                 //load(&l1);//读取
-                 break;
-            case 8:
+            case 5:
+                loadS(&l1);//读取
+                loadT(&l2);
+                displayS(&l1);
+                displayT(&l2);
+                break;
+            case 6:
                  saveS(&l1);//保存
+                 saveT(&l2);
                  break;
-            case 9:
+            case 7:
                 printf("-----–谢谢使用-----\n");
                 exit(1);
         }

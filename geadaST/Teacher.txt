@@ -1,0 +1,5 @@
+1 T1 boy 136
+2 T2 girl 155
+3 T3 boy 1581
+4 T4 girl 1700
+5 T5 boy 1717
