@@ -107,7 +107,7 @@ int loadT(SeqListT *L)//从文件中读取--老师
 }
 
 
-void saveS(SeqListS *L)   //存储学生数据
+/*void saveS(SeqListS *L)   //存储学生数据
 {
     int n,i=0;
     FILE *fp;
@@ -162,6 +162,38 @@ void saveS(SeqListS *L)   //存储学生数据
                 {
                     //fprintf(fp,"|%-8d|%-8s|%-10d|%-8d|%-8d|%-8d|%-8d|\n",i+1,L->elem[i].name,L->elem[i].num,L->elem[i].MathScore,L->elem[i].ChinaseScore,L->elem[i].EnglishScore,L->elem[i].Score);
                     fprintf(fp,"%d,%s,%s,%s,%s,%d,%s,%d\n",i+1,Y[a].name,Y[a].sex,Y[a].proname,Y[a].protype,Y[a].num,Y[a].class,Y[a].Score);
+                }
+                printf("        学生信息文件保存成功！\n");
+                fclose(fp);
+            }
+    }
+    else
+    {
+        return;
+    }
+}*/
+
+void saveS(SeqListS *L)   //存储学生数据
+{
+    int n,i=0;
+    FILE *fp;
+    printf("是否需要保存文件：1.是   2.否\n");
+    scanf("%d",&n);
+    if(n)
+    {
+        if (L->lastS==-1)
+            printf("无记录，无法保存！");
+        else
+            if((fp=fopen("/Users/hxxguohua/Desktop/grade/geadaST/geadaST/student.csv","w"))==NULL)  //打开文件并判断打开是否正常
+            {
+                printf("不能打开文件！\n");   //打开文件错误
+            }
+            else if(L->lastS!=-1)
+            {
+                for (i=0;i<=L->lastS;i++)
+                {
+                    //fprintf(fp,"|%-8d|%-8s|%-10d|%-8d|%-8d|%-8d|%-8d|\n",i+1,L->elem[i].name,L->elem[i].num,L->elem[i].MathScore,L->elem[i].ChinaseScore,L->elem[i].EnglishScore,L->elem[i].Score);
+                    fprintf(fp,"%d,%s,%s,%s,%s,%d,%s\n",i+1,L->elem[i].name,L->elem[i].sex,L->elem[i].proname,L->elem[i].protype,L->elem[i].num,L->elem[i].class);
                 }
                 printf("        学生信息文件保存成功！\n");
                 fclose(fp);
