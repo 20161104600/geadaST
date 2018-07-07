@@ -6,6 +6,7 @@
 //  Copyright © 2018年 Hxxguohua. All rights reserved.
 //
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <malloc/malloc.h>
@@ -44,18 +45,18 @@ typedef struct
     int lastT;
 }SeqListT;
 
-void save(SeqListS *L)   //写入数据
+void saveS(SeqListS *L)   //存储学生数据
 {
     int n,i=0;
     FILE *fp;
-    printf(" ");
+    printf("是否需要保存文件：1.是   2.否\n");
     scanf("%d",&n);
     if(n)
     {
         if (L->lastS==-1)
             printf("无记录，无法保存！");
         else
-            if((fp=fopen("workers.txt","w"))==NULL)  //打开文件并判断打开是否正常
+            if((fp=fopen("/Users/hxxguohua/Desktop/grade/geadaST/geadaST/student.csv","w"))==NULL)  //打开文件并判断打开是否正常
             {
                 printf("不能打开文件！\n");   //打开文件错误
             }
@@ -76,44 +77,36 @@ void save(SeqListS *L)   //写入数据
     }
 }
 
-int load(SeqListS *L)//存储数据
+void saveT(SeqListT *L)   //存储老师数据
 {
-    FILE * fp;
-    fp=fopen("Users/hxxguohua/Desktop/grade/geadaST/geadaST/student.csv","r+");
-    if(fp==NULL)
+    int n,i=0;
+    FILE *fp;
+    printf("是否需要保存文件：1.是   2.否\n");
+    scanf("%d",&n);
+    if(n)
     {
-        printf("没有这个文件！\n");
-        return 0;
+        if (L->lastT==-1)
+            printf("无记录，无法保存！");
+        else
+            if((fp=fopen("/Users/hxxguohua/Desktop/grade/geadaST/geadaST/teacher.csv","w"))==NULL)  //打开文件并判断打开是否正常
+            {
+                printf("不能打开文件！\n");   //打开文件错误
+            }
+            else if(L->lastT!=-1)
+            {
+                for (i=0;i<=L->lastT;i++)
+                {
+                    //fprintf(fp,"|%-8d|%-8s|%-10d|%-8d|%-8d|%-8d|%-8d|\n",i+1,L->elem[i].name,L->elem[i].num,L->elem[i].MathScore,L->elem[i].ChinaseScore,L->elem[i].EnglishScore,L->elem[i].Score);
+                    fprintf(fp,"%d,%s,%s,%d\n",i+1,L->elem[i].name,L->elem[i].sex,L->elem[i].num);
+                }
+                printf("文件保存成功！\n");
+                fclose(fp);
+            }
     }
-    else if(fp!=NULL)
+    else
     {
-        int i,j;
-        char name[10];
-        char sex[10];
-        char Sclass[10],Sproname[10],Sprotype[10];
-        int Snum;
-        //ElemType X;
-        //char proname[10];
-        //char protype[10];
-        //int num;
-        //char class[10];
-        //int Score;
-        while(fscanf(fp,"%d,%s,%s,%s,%s,%d,%s\n",&j,name,sex,Sproname,Sprotype,&Snum,Sclass)!=EOF)
-        {
-            i=j-1;
-            strcpy(L->elem[i].name,name);
-            strcpy(L->elem[i].sex,sex);
-            strcpy(L->elem[i].proname,Sproname);
-            strcpy(L->elem[i].protype,Sprotype);
-            strcpy(L->elem[i].class,Sclass);
-            L->elem[i].num=Snum;
-            //printf("|%-8d|%-8s|%-10d|%-8d|%-8d|%-8d|%-8d|\n",i+1,L->elem[i].name,L->elem[i].num,L->elem[i].MathScore,L->elem[i].ChinaseScore,L->elem[i].EnglishScore,L->elem[i].Score);
-            L->lastS++;
-        }
-        printf("        文件读取成功！\n");
-        fclose(fp);
+        return;
     }
-    return 0;
 }
 
 char menu()
@@ -121,9 +114,9 @@ char menu()
     int input;
     printf("\n");
     printf("         |************评分系统*************|        \n");
-    printf("         |--------------------------------|        \n");
+    printf("         |一============================一|        \n");
     printf("         |            菜单选项             |        \n");
-    printf("         |--------------------------------|        \n");
+    printf("         |-------------------------------|        \n");
     printf("         |    1---输入                    |        \n");
     printf("         |    2---增加                    |        \n");
     printf("         |    3---删除                    |        \n");
@@ -143,7 +136,7 @@ char menu()
     return input;
 }
 
-bool Insert(SeqListT* L) //增加老师
+bool InsertT(SeqListT* L) //增加老师
 {
     int Int;
     printf("请输入要插入老师的相关信息：");
@@ -173,7 +166,45 @@ bool Insert(SeqListT* L) //增加老师
     L->lastT++;
     return true;
 }
-bool delet(SeqListT* L) //删除老师信息
+
+bool InsertS(SeqListS* L) //增加学生
+{
+    int Int;
+    printf("请输入要插入学生的相关信息：");
+    ElemTypeS X;
+    printf("请输入学生姓名：\n");
+    scanf("%s",X.name);
+    printf("请输入学生性别：\n");
+    scanf("%s",X.sex);
+    printf("输入学生的班级：\n");
+    scanf("%s",X.class);
+    printf("输入学生的联系方式：\n");
+    scanf("%d",&X.num);
+    printf("输入学生的节目名称：\n");
+    scanf("%s",X.proname);
+    printf("输入学生的节目类型：\n");
+    scanf("%s",X.protype);
+    printf("请输入要插入的位置:\n");
+    scanf("%d",&Int);
+    int j;
+    if(L->lastS==MAXSIZE-1){
+        printf("线性表满！\n");
+        return false;
+    }
+    if(Int<1 || Int>L->lastS+2){
+        printf("位置不合法！\n");
+        return false;
+    }
+    for(j=L->lastS; j>=Int-1; j--)
+    {
+        L->elem[j+1]=L->elem[j];
+    }
+    L->elem[Int-1]=X;
+    L->lastS++;
+    return true;
+}
+
+bool deletT(SeqListT* L) //删除老师信息
 {
     int i,j;
     printf("请选择要删除老师信息的位置:\n");
@@ -193,6 +224,102 @@ bool delet(SeqListT* L) //删除老师信息
     L->lastT--;
     printf("删除成功！\n");
     return true;
+}
+
+bool deletS(SeqListS* L) //删除学生信息
+{
+    int i,j;
+    printf("请选择要删除学生信息的位置:\n");
+    scanf("%d/n",&i);
+    if(L->lastS==-1){
+        printf("没有可以删除的学生信息！\n");
+        return false;
+    }
+    if(i<1 || i>L->lastS+2){
+        printf("位置不合法！\n");
+        return false;
+    }
+    for(j=i-1; j<L->lastS; j++)
+    {
+        L->elem[j]=L->elem[j+1];
+    }
+    L->lastS--;
+    printf("删除成功！\n");
+    return true;
+}
+
+void chenageS(SeqListS* L) //修改学生信息
+{
+    int i,j,D=1;
+    printf("请输入要修改学生的序号:");
+    scanf("%d",&i);
+    while(D==1)
+    {
+        printf("-----请输入要修改什么学生信息：------\n");
+        printf("-----     1.   姓名        ------\n");
+        printf("-----     2.   性别        ------\n");
+        printf("-----     3.   节目名称     ------\n");
+        printf("-----     4.   节目类型     ------\n");
+        printf("-----     5.   联系方式     ------\n");
+        scanf("%d",&j);
+        switch(j)
+        {
+            case 1:
+                printf("修改姓名为：\n");
+                scanf("%s",L->elem[i-1].name);
+                break;
+            case 2:
+                printf("修改性别为：\n");
+                scanf("%s",L->elem[i-1].sex);
+                break;
+            case 3:
+                printf("修改节目名称为：\n");
+                scanf("%s",L->elem[i-1].proname);
+                break;
+            case 4:
+                printf("修改节目类型为：\n");
+                scanf("%s",L->elem[i-1].protype);
+                break;
+            case 5:
+                printf("修改联系方式为：\n");
+                scanf("%d",&L->elem[i-1].num);
+                break;
+        }
+        printf("是否继续修改学生们的信息：1.是   2.否\n");
+        scanf("%d",&D);
+    }
+}
+
+void chenageT(SeqListT* L) //修改老师信息
+{
+    int i,j,D=1;
+    printf("请输入要修改老师的序号:");
+    scanf("%d",&i);
+    while(D==1)
+    {
+        printf("-----请输入要修改什么老师信息：------\n");
+        printf("-----     1.   姓名        ------\n");
+        printf("-----     2.   性别        ------\n");
+        printf("-----     3.   联系方式     ------\n");
+        scanf("%d",&j);
+        switch(j)
+        {
+            case 1:
+                printf("修改姓名为：\n");
+                scanf("%s",L->elem[i-1].name);
+                break;
+            case 2:
+                printf("修改性别为：\n");
+                scanf("%s",L->elem[i-1].sex);
+                break;
+            case 3:
+                printf("修改联系方式为：\n");
+                scanf("%d",&L->elem[i-1].num);
+                break;
+        }
+        printf("是否继续修改学生们的信息：1.是   2.否\n");
+        scanf("%d",&D);
+    }
 }
 
 void sortMax(SeqListT *L)
@@ -225,7 +352,7 @@ int count(SeqListT L)
     average=j/c;
     return average;
 }
-void readin(SeqListT *L)// 输入老师相关信息
+void readinT(SeqListT *L)// 输入老师相关信息
 {
     int r;
     int i;
@@ -255,6 +382,35 @@ void readin(SeqListT *L)// 输入老师相关信息
         scanf("%s",L->elem[i].sex);
         printf("请输入老师的联系方式：\n");
         scanf("%d",&L->elem[i].num);
+    }
+}
+
+void readinS(SeqListS *L)// 输入学生相关信息
+{
+    int r;
+    int i;
+    printf("输入想要录入学生的数量:");
+    scanf("%d",&r);
+    //char name1[10];
+    for(i=0; i<=r-1; i++)
+    {
+        L->lastS++;
+        printf("----------------------------\n");
+        printf("请输入第%d名学生的信息：\n",i+1);
+        printf("请输入学生的姓名\n");
+        scanf("%s",L->elem[i].name);
+        //strcpy(L->elem[i].name,name1);
+        printf("请输入学生的性别：\n");
+        scanf("%s",L->elem[i].sex);
+        printf("请输入学生的节目名称：\n");
+        scanf("%s",L->elem[i].proname);
+        printf("请输入学生的节目类型：\n");
+        scanf("%s",L->elem[i].protype);
+        L->elem[i].Score=0;
+        printf("请输入学生的联系方式：\n");
+        scanf("%d",&L->elem[i].num);
+        printf("请输入学生的班级：\n");
+        scanf("%s",L->elem[i].class);
     }
 }
 
@@ -291,7 +447,7 @@ bool  findNameS(SeqListS L) //查找学生int
     {
         printf("|   序号  |    姓名   |  性别  |   节目名称  |  节目类型  |   联系方式  |  班级   |\n");
         printf("|--------|----------|--------|----———----|----———----|----———----|--------|\n");
-        printf("|%-8d|%-8s|%-8s|%-10s|%-10s|%-10d|%-8s|\n",i+1,L.elem[i].name,L.elem[i].sex,L.elem[i].proname,L.elem[i].protype,L.elem[i].num,L.elem[i].class);
+        printf("|   %d   |    %s    |   %s   |  %s       |  %s       | %d        |   %s   |\n",i+1,L.elem[i].name,L.elem[i].sex,L.elem[i].proname,L.elem[i].protype,L.elem[i].num,L.elem[i].class);
         return true;
     }
     else
@@ -302,8 +458,8 @@ bool  findNameS(SeqListS L) //查找学生int
 void find(SeqListT L1,SeqListS L2)
 {
     int a;
-    if(L1.lastT==-1)
-        printf("没有可以查询的老师信息!\n");
+    if(L1.lastT==-1 && L2.lastS==-1)
+        printf("没有可以查询的信息!\n");
     else
     {
         printf("查找学生还是教师（1.教师 2.学生）\n");
@@ -368,7 +524,7 @@ int  main()
         switch(menu())
         {
             case 1:
-                readin(&l2);//输入
+                readinS(&l1);//输入
                 //display(l2);
                 break;
             case 2:
@@ -379,7 +535,7 @@ int  main()
                 //display(l);
                 break;
             case 4:
-                delet(&l2);//修改
+                chenage(&l1);//修改
                 //display(l);
                 break;
             case 5:
@@ -390,10 +546,10 @@ int  main()
                 //display(l);
                 break;
             case 7:
-                 save(&l1);//读取
+                 //load(&l1);//读取
                  break;
             case 8:
-                 load(&l1);//保存
+                 saveS(&l1);//保存
                  break;
             case 9:
                 printf("-----–谢谢使用-----\n");
